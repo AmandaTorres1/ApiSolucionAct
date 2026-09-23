@@ -1,0 +1,15 @@
+C:\Users\Win11\source\repos\Api\Dao\bin\Debug\net10.0\Dao_library.deps.json
+C:\Users\Win11\source\repos\Api\Dao\bin\Debug\net10.0\Dao_library.dll
+C:\Users\Win11\source\repos\Api\Dao\bin\Debug\net10.0\Dao_library.pdb
+C:\Users\Win11\source\repos\Api\Dao\bin\Debug\net10.0\Entity_library.dll
+C:\Users\Win11\source\repos\Api\Dao\bin\Debug\net10.0\Entity_library.pdb
+C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\Dao_library.csproj.AssemblyReference.cache
+C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\Dao_library.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\Dao_library.AssemblyInfoInputs.cache
+C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\Dao_library.AssemblyInfo.cs
+C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\Dao_library.csproj.CoreCompileInputs.cache
+C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\Dao_libr.18F5ABC2.Up2Date
+C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\Dao_library.dll
+C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\refint\Dao_library.dll
+C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\Dao_library.pdb
+C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\ref\Dao_library.dll
