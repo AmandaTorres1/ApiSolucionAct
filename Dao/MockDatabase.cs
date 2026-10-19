@@ -1,5 +1,6 @@
 ﻿using Entity_library;
-namespace Dao
+using DAO_library;
+namespace Dao_library
 {
     public static class MockDatabase
     {
@@ -17,22 +18,22 @@ namespace Dao
             Persons.Add(Person1);
             var person2 = new Person(2, "Pedro", "31456345", 25);
             Persons.Add(person2);
-            var course1 = new Course("Mathematics");
+            var course1 = new Course("Mathematics", 1);
             Courses.Add(course1);
-            var course2 = new Course("English");
+            var course2 = new Course("English", 2);
             Courses.Add(course2);
             var student1 = new Student(1, "Ulises", "4356560", 26, "15");
             Students.Add(student1);
             var student2 = new Student(2, "Maria", "4356560", 22, "16");
             Students.Add(student2);
-            var team1 = new Team("Team A", "Category 1");
+            var team1 = new Team("Team A", "Category 1",1);
             Teams.Add(team1);
-            var team2 = new Team("Team B", "Category 2");
+            var team2 = new Team("Team B", "Category 2",2);
             var player1 = new Player(1, "Carlos", "12345678", 30, 10);
             Players.Add(player1);
             var player2 = new Player(2, "Ana", "87654321", 28, 7);
             Players.Add(player2);
-            var activity1 = new Activity("Parcial", "Evaluacion practica", DateTime.Now);
+            var activity1 = new Activity("Parcial", "Evaluacion practica", DateTime.Now,1);
             Activities.Add(activity1);
             var trainer1 = new Trainer(1, "Amanda", "43926349", 24);
             Trainers.Add(trainer1);

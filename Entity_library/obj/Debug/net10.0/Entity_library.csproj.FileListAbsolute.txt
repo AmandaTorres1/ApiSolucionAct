@@ -10,3 +10,4 @@ C:\Users\Win11\source\repos\Api\Entity_library\obj\Debug\net10.0\refint\Entity_l
 C:\Users\Win11\source\repos\Api\Entity_library\obj\Debug\net10.0\Entity_library.pdb
 C:\Users\Win11\source\repos\Api\Entity_library\obj\Debug\net10.0\ref\Entity_library.dll
 C:\Users\Win11\source\repos\Api\Entity_library\obj\Debug\net10.0\Entity_l.225171B5.Up2Date
+C:\Users\Win11\source\repos\Api\Entity_library\obj\Debug\net10.0\Entity_library.sourcelink.json

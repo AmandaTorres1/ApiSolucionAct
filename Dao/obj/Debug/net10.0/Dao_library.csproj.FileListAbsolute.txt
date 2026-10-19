@@ -13,3 +13,4 @@ C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\Dao_library.dll
 C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\refint\Dao_library.dll
 C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\Dao_library.pdb
 C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\ref\Dao_library.dll
+C:\Users\Win11\source\repos\Api\Dao\obj\Debug\net10.0\Dao_library.sourcelink.json

@@ -1,4 +1,4 @@
-﻿using Dao;
+﻿using Dao_library;
 using Entity_library;
 using System;
 using System.Collections.Generic;
@@ -22,8 +22,32 @@ namespace Dao_library
             }
             return null;
         }
-      
-
+      public Course PutCourse(Course course)
+        {
+            var existingCourse = MockDatabase.Courses.Find(c => c.Id == course.Id);
+            if (existingCourse != null)
+            {
+                existingCourse.Name = course.Name;
+                existingCourse.ListaActividad = course.ListaActividad;
+                existingCourse.ListaEstudiante = course.ListaEstudiante;
+                return existingCourse;
+            }
+            return null;
+        }
+        public List<Course> GetCourses()
+        {
+            return MockDatabase.Courses;
+        }
+        public bool DeleteCourse(Course course)
+        {
+            var existingCourse = MockDatabase.Courses.Find(c => c.Id == course.Id);
+            if (existingCourse != null)
+            {
+                MockDatabase.Courses.Remove(existingCourse);
+                return true;
+            }
+            return false;
+        }
 
     }
 }
