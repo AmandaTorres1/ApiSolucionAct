@@ -1,83 +1,75 @@
-﻿using Microsoft.AspNetCore.Http;
+using Dao_library;
+using Entity_library;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    public class PlayerController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PlayerController : ControllerBase
     {
-        // GET: PlayerController
-        public ActionResult Index()
+        private readonly ILogger<PlayerController> _logger;
+        private readonly PlayerDao _playerDAO;
+
+        public PlayerController(ILogger<PlayerController> logger, PlayerDao playerDAO)
         {
-            return View();
+            _logger = logger;
+            _playerDAO = playerDAO;
         }
 
-        // GET: PlayerController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        public List<Player> GetPlayers()
         {
-            return View();
+            return _playerDAO.GetAllPlayers();
         }
 
-        // GET: PlayerController/Create
-        public ActionResult Create()
+        [HttpGet("{id}")]
+        public IActionResult Get(long id)
         {
-            return View();
+            var player = _playerDAO.ReadPlayerById(id);
+            if (player == null)
+            {
+                return NotFound();
+            }
+            return Ok(player);
         }
 
-        // POST: PlayerController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult CreatePlayer(Player player)
         {
-            try
+            if (player.Name == null)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest("Name is required.");
             }
-            catch
-            {
-                return View();
-            }
+
+            Player createdPlayer = _playerDAO.CreatePlayer(player);
+            return Created($"/player/{createdPlayer.Id}", createdPlayer);
         }
 
-        // GET: PlayerController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpPut("{id}")]
+        public ActionResult UpdatePlayer(long id, Player player)
         {
-            return View();
+            Player? existingPlayer = _playerDAO.ReadPlayerById(id);
+            if (existingPlayer == null)
+            {
+                return NotFound();
+            }
+
+            player.Id = id;
+            _playerDAO.UpdatePlayer(player);
+
+            return Ok(player);
         }
 
-        // POST: PlayerController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpDelete("{id}")]
+        public IActionResult DeletePlayer(long id)
         {
-            try
+            bool deleted = _playerDAO.DeletePlayerById(id);
+            if (!deleted)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: PlayerController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: PlayerController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return NoContent();
         }
     }
 }

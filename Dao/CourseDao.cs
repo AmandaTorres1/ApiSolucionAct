@@ -1,46 +1,37 @@
-﻿using Dao_library;
 using Entity_library;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Dao_library
 {
     public class CourseDao
     {
-        public Course GetCourse(Course course)
+        public Course CreateCourse(Course course)
         {
-            return MockDatabase.Courses.FirstOrDefault(c => c.Id == course.Id);
+            course.Id = MockDatabase.Courses.Count + 1;
+            MockDatabase.Courses.Add(course);
+            return course;
         }
-        public Course PostCourse(Course course)
+
+        public Course? ReadCourseById(long id)
         {
-            if (course != null)
-            {
-                course.Id = MockDatabase.Courses.Count + 1;
-                MockDatabase.Courses.Add(course);
-                return course;
-            }
-            return null;
+            return MockDatabase.Courses.FirstOrDefault(c => c.Id == id);
         }
-      public Course PutCourse(Course course)
+
+        public bool UpdateCourse(Course course)
         {
-            var existingCourse = MockDatabase.Courses.Find(c => c.Id == course.Id);
+            var existingCourse = MockDatabase.Courses.FirstOrDefault(c => c.Id == course.Id);
             if (existingCourse != null)
             {
                 existingCourse.Name = course.Name;
                 existingCourse.ListaActividad = course.ListaActividad;
                 existingCourse.ListaEstudiante = course.ListaEstudiante;
-                return existingCourse;
+                return true;
             }
-            return null;
+            return false;
         }
-        public List<Course> GetCourses()
+
+        public bool DeleteCourseById(long id)
         {
-            return MockDatabase.Courses;
-        }
-        public bool DeleteCourse(Course course)
-        {
-            var existingCourse = MockDatabase.Courses.Find(c => c.Id == course.Id);
+            var existingCourse = MockDatabase.Courses.FirstOrDefault(c => c.Id == id);
             if (existingCourse != null)
             {
                 MockDatabase.Courses.Remove(existingCourse);
@@ -49,5 +40,9 @@ namespace Dao_library
             return false;
         }
 
+        public List<Course> GetAllCourses()
+        {
+            return MockDatabase.Courses;
+        }
     }
 }

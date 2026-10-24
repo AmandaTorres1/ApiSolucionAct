@@ -1,83 +1,75 @@
-﻿using Microsoft.AspNetCore.Http;
+using Dao_library;
+using Entity_library;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    public class TrainerController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class TrainerController : ControllerBase
     {
-        // GET: TrainerController
-        public ActionResult Index()
+        private readonly ILogger<TrainerController> _logger;
+        private readonly TrainerDao _trainerDAO;
+
+        public TrainerController(ILogger<TrainerController> logger, TrainerDao trainerDAO)
         {
-            return View();
+            _logger = logger;
+            _trainerDAO = trainerDAO;
         }
 
-        // GET: TrainerController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        public List<Trainer> GetTrainers()
         {
-            return View();
+            return _trainerDAO.GetAllTrainers();
         }
 
-        // GET: TrainerController/Create
-        public ActionResult Create()
+        [HttpGet("{id}")]
+        public IActionResult Get(long id)
         {
-            return View();
+            var trainer = _trainerDAO.ReadTrainerById(id);
+            if (trainer == null)
+            {
+                return NotFound();
+            }
+            return Ok(trainer);
         }
 
-        // POST: TrainerController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult CreateTrainer(Trainer trainer)
         {
-            try
+            if (trainer.Name == null)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest("Name is required.");
             }
-            catch
-            {
-                return View();
-            }
+
+            Trainer createdTrainer = _trainerDAO.CreateTrainer(trainer);
+            return Created($"/trainer/{createdTrainer.Id}", createdTrainer);
         }
 
-        // GET: TrainerController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpPut("{id}")]
+        public ActionResult UpdateTrainer(long id, Trainer trainer)
         {
-            return View();
+            Trainer? existingTrainer = _trainerDAO.ReadTrainerById(id);
+            if (existingTrainer == null)
+            {
+                return NotFound();
+            }
+
+            trainer.Id = id;
+            _trainerDAO.UpdateTrainer(trainer);
+
+            return Ok(trainer);
         }
 
-        // POST: TrainerController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTrainer(long id)
         {
-            try
+            bool deleted = _trainerDAO.DeleteTrainerById(id);
+            if (!deleted)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: TrainerController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: TrainerController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return NoContent();
         }
     }
 }

@@ -1,46 +1,37 @@
-﻿using Dao_library;
 using Entity_library;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Dao_library
 {
     public class TrainerDao
     {
-        public Trainer GetTrainer(Trainer trainer)
+        public Trainer CreateTrainer(Trainer trainer)
         {
-            return MockDatabase.Trainers.FirstOrDefault(t => t.Id == trainer.Id);
+            trainer.Id = MockDatabase.Trainers.Count + 1;
+            MockDatabase.Trainers.Add(trainer);
+            return trainer;
         }
-        public Trainer PostTrainer(Trainer trainer)
+
+        public Trainer? ReadTrainerById(long id)
         {
-            if (trainer != null)
-            {
-                trainer.Id = MockDatabase.Trainers.Count + 1;
-                MockDatabase.Trainers.Add(trainer);
-                return trainer;
-            }
-            return null;
+            return MockDatabase.Trainers.FirstOrDefault(t => t.Id == id);
         }
-        public Trainer PutTrainer(Trainer trainer)
+
+        public bool UpdateTrainer(Trainer trainer)
         {
-            var existingTrainer = MockDatabase.Trainers.Find(t => t.Id == trainer.Id);
+            var existingTrainer = MockDatabase.Trainers.FirstOrDefault(t => t.Id == trainer.Id);
             if (existingTrainer != null)
             {
                 existingTrainer.Name = trainer.Name;
                 existingTrainer.Dni = trainer.Dni;
                 existingTrainer.Age = trainer.Age;
-                return existingTrainer;
+                return true;
             }
-            return null;
+            return false;
         }
-        public List<Trainer> GetTrainers()
+
+        public bool DeleteTrainerById(long id)
         {
-            return MockDatabase.Trainers;
-        }
-        public bool DeleteTrainer(Trainer trainer)
-        {
-            var existingTrainer = MockDatabase.Trainers.Find(t => t.Id == trainer.Id);
+            var existingTrainer = MockDatabase.Trainers.FirstOrDefault(t => t.Id == id);
             if (existingTrainer != null)
             {
                 MockDatabase.Trainers.Remove(existingTrainer);
@@ -49,5 +40,9 @@ namespace Dao_library
             return false;
         }
 
+        public List<Trainer> GetAllTrainers()
+        {
+            return MockDatabase.Trainers;
+        }
     }
 }

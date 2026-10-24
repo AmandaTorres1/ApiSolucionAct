@@ -1,54 +1,49 @@
-﻿using Dao_library;
 using Entity_library;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Dao_library
 {
-    public  class ActivityDao
+    public class ActivityDao
     {
-        public Activity GetActivity(Activity activity)
+        public Activity CreateActivity(Activity activity)
         {
-            return MockDatabase.Activities.FirstOrDefault(a => a.Id == activity.Id);
+            activity.Id = MockDatabase.Activities.Count + 1;
+            MockDatabase.Activities.Add(activity);
+            return activity;
         }
-        public Activity PostActivity(Activity activity)
+
+        public Activity? ReadActivityById(long id)
         {
-            if (activity != null)
-            {
-                activity.Id = MockDatabase.Activities.Count + 1;
-                MockDatabase.Activities.Add(activity);
-                return activity;
-            }
-            return null;
+            return MockDatabase.Activities.FirstOrDefault(a => a.Id == id);
         }
-        public Activity PutActivity(Activity activity)
+
+        public bool UpdateActivity(Activity activity)
         {
-            var existingActivity = MockDatabase.Activities.Find(a => a.Id == activity.Id);
+            var existingActivity = MockDatabase.Activities.FirstOrDefault(a => a.Id == activity.Id);
             if (existingActivity != null)
             {
-               
                 existingActivity.Title = activity.Title;
                 existingActivity.Description = activity.Description;
                 existingActivity.Date = activity.Date;
                 existingActivity.typeActivity = activity.typeActivity;
-                return existingActivity;
+                return true;
             }
-            return null;
+            return false;
         }
-        public List<Activity> GetActivities()
+
+        public bool DeleteActivityById(long id)
         {
-            return MockDatabase.Activities;
-        }
-        public bool DeleteActivity(Activity activity)
-        {
-            var existingActivity = MockDatabase.Activities.Find(a => a.Id == activity.Id);
+            var existingActivity = MockDatabase.Activities.FirstOrDefault(a => a.Id == id);
             if (existingActivity != null)
             {
                 MockDatabase.Activities.Remove(existingActivity);
                 return true;
             }
             return false;
+        }
+
+        public List<Activity> GetAllActivities()
+        {
+            return MockDatabase.Activities;
         }
     }
 }

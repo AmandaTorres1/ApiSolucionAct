@@ -1,85 +1,75 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using DAO_library;
+using Dao_library;
 using Entity_library;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    public class StudentController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class StudentController : ControllerBase
     {
-        // GET: StudentController
-        public ActionResult Index()
+        private readonly ILogger<StudentController> _logger;
+        private readonly StudentDAO _studentDAO;
+
+        public StudentController(ILogger<StudentController> logger, StudentDAO studentDAO)
         {
-            return View();
+            _logger = logger;
+            _studentDAO = studentDAO;
         }
 
-        // GET: StudentController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        public List<Student> GetStudents()
         {
-            return View();
+            return _studentDAO.GetAllStudents();
         }
 
-        // GET: StudentController/Create
-        public ActionResult Create()
+        [HttpGet("{id}")]
+        public IActionResult Get(long id)
         {
-            return View();
+            var student = _studentDAO.ReadStudentById(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            return Ok(student);
         }
 
-        // POST: StudentController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult CreateStudent(Student student)
         {
-            try
+            if (student.Name == null || student.File == null)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest("Name and File are required.");
             }
-            catch
-            {
-                return View();
-            }
+
+            Student createdStudent = _studentDAO.CreateStudent(student);
+            return Created($"/student/{createdStudent.Id}", createdStudent);
         }
 
-        // GET: StudentController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpPut("{id}")]
+        public ActionResult UpdateStudent(long id, Student student)
         {
-            return View();
+            Student? existingStudent = _studentDAO.ReadStudentById(id);
+            if (existingStudent == null)
+            {
+                return NotFound();
+            }
+
+            student.Id = id;
+            _studentDAO.UpdateStudent(student);
+
+            return Ok(student);
         }
 
-        // POST: StudentController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteStudent(long id)
         {
-            try
+            bool deleted = _studentDAO.DeleteStudentById(id);
+            if (!deleted)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: StudentController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: StudentController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return NoContent();
         }
     }
 }

@@ -1,83 +1,75 @@
-﻿using Microsoft.AspNetCore.Http;
+using Dao_library;
+using Entity_library;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    public class CourseController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CourseController : ControllerBase
     {
-        // GET: CourseController
-        public ActionResult Index()
+        private readonly ILogger<CourseController> _logger;
+        private readonly CourseDao _courseDAO;
+
+        public CourseController(ILogger<CourseController> logger, CourseDao courseDAO)
         {
-            return View();
+            _logger = logger;
+            _courseDAO = courseDAO;
         }
 
-        // GET: CourseController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        public List<Course> GetCourses()
         {
-            return View();
+            return _courseDAO.GetAllCourses();
         }
 
-        // GET: CourseController/Create
-        public ActionResult Create()
+        [HttpGet("{id}")]
+        public IActionResult Get(long id)
         {
-            return View();
+            var course = _courseDAO.ReadCourseById(id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            return Ok(course);
         }
 
-        // POST: CourseController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult CreateCourse(Course course)
         {
-            try
+            if (course.Name == null)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest("Name is required.");
             }
-            catch
-            {
-                return View();
-            }
+
+            Course createdCourse = _courseDAO.CreateCourse(course);
+            return Created($"/course/{createdCourse.Id}", createdCourse);
         }
 
-        // GET: CourseController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpPut("{id}")]
+        public ActionResult UpdateCourse(long id, Course course)
         {
-            return View();
+            Course? existingCourse = _courseDAO.ReadCourseById(id);
+            if (existingCourse == null)
+            {
+                return NotFound();
+            }
+
+            course.Id = id;
+            _courseDAO.UpdateCourse(course);
+
+            return Ok(course);
         }
 
-        // POST: CourseController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCourse(long id)
         {
-            try
+            bool deleted = _courseDAO.DeleteCourseById(id);
+            if (!deleted)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: CourseController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CourseController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return NoContent();
         }
     }
 }

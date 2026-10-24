@@ -1,31 +1,24 @@
-﻿using Dao_library;
 using Entity_library;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Dao_library
 {
     public class PlayerDao
     {
-        public Player GetPlayer (Player player)
+        public Player CreatePlayer(Player player)
         {
-           return MockDatabase.Players.Find(p => p.Id == player.Id);
+            player.Id = MockDatabase.Players.Count + 1;
+            MockDatabase.Players.Add(player);
+            return player;
         }
-        public Player PotPlayer(Player player)
-        {
-            if(player !=null)
-            {
-                player.Id = MockDatabase.Players.Count + 1;
-                MockDatabase.Players.Add(player);
-                return player;
-            }
-            return null;
 
-        }
-        public Player PutPlayer(Player player)
+        public Player? ReadPlayerById(long id)
         {
-            var existingPlayer = MockDatabase.Players.Find(p => p.Id == player.Id);
+            return MockDatabase.Players.FirstOrDefault(p => p.Id == id);
+        }
+
+        public bool UpdatePlayer(Player player)
+        {
+            var existingPlayer = MockDatabase.Players.FirstOrDefault(p => p.Id == player.Id);
             if (existingPlayer != null)
             {
                 existingPlayer.Name = player.Name;
@@ -33,19 +26,14 @@ namespace Dao_library
                 existingPlayer.Dni = player.Dni;
                 existingPlayer.Number = player.Number;
                 existingPlayer.ListaTeam = player.ListaTeam;
-
-
-                return existingPlayer;
+                return true;
             }
-            return null;
+            return false;
         }
-        public List<Player> GetPlayer()
+
+        public bool DeletePlayerById(long id)
         {
-            return MockDatabase.Players;
-        }
-        public bool DeletePlayer(Player player)
-        {
-            var existingPlayer = MockDatabase.Players.Find(p => p.Id == player.Id);
+            var existingPlayer = MockDatabase.Players.FirstOrDefault(p => p.Id == id);
             if (existingPlayer != null)
             {
                 MockDatabase.Players.Remove(existingPlayer);
@@ -54,5 +42,9 @@ namespace Dao_library
             return false;
         }
 
+        public List<Player> GetAllPlayers()
+        {
+            return MockDatabase.Players;
+        }
     }
 }

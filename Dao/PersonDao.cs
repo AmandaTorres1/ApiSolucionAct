@@ -1,30 +1,22 @@
-﻿using Dao_library;
 using Entity_library;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Dao_library
 {
     public class PersonDao
     {
-        
-            public Person GetStudent(Person person)
-            {
-                return MockDatabase.Persons.FirstOrDefault(p => p.Id == person.Id);
-            }
-        public Person PostPerson(Person person)
+        public Person CreatePerson(Person person)
         {
-            if (person != null)
-            {
-                person.Id = MockDatabase.Persons.Count + 1;
-                MockDatabase.Persons.Add(person);
-                return person;
-            }
-            return null;
+            person.Id = MockDatabase.Persons.Count + 1;
+            MockDatabase.Persons.Add(person);
+            return person;
         }
 
-        public Person PutPerson(Person person)
+        public Person? ReadPersonById(long id)
+        {
+            return MockDatabase.Persons.FirstOrDefault(p => p.Id == id);
+        }
+
+        public bool UpdatePerson(Person person)
         {
             var existingPerson = MockDatabase.Persons.FirstOrDefault(p => p.Id == person.Id);
             if (existingPerson != null)
@@ -32,25 +24,25 @@ namespace Dao_library
                 existingPerson.Name = person.Name;
                 existingPerson.Age = person.Age;
                 existingPerson.Dni = person.Dni;
-                return existingPerson;
+                return true;
             }
-            return null;
+            return false;
         }
 
-        public List<Person> GetPerson()
+        public bool DeletePersonById(long id)
         {
-            return MockDatabase.Persons;
-        }
-
-        public bool DeletePerson(Person person)
-        {
-            var existingPerson = MockDatabase.Persons.FirstOrDefault(p => p.Id == person.Id);
+            var existingPerson = MockDatabase.Persons.FirstOrDefault(p => p.Id == id);
             if (existingPerson != null)
             {
                 MockDatabase.Persons.Remove(existingPerson);
                 return true;
             }
             return false;
-        }   
+        }
+
+        public List<Person> GetAllPersons()
+        {
+            return MockDatabase.Persons;
+        }
     }
 }

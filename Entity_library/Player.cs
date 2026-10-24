@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Entity_library
@@ -9,6 +10,7 @@ namespace Entity_library
         //Atributo
         private int number;
         //Propiedad
+        [Range(1, 99)]
         public int Number { get => number; set => number = value; }
         public List<Team> ListaTeam { get; set; }
 

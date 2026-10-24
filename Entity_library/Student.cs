@@ -1,13 +1,16 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Entity_library
 {
     public class Student:Person
     {
-        private string file;
+        private string file = "";
 
+        [Required]
+        [StringLength(50, MinimumLength = 1)]
         public string File { get => file; set => file = value; }
         public List<Course> ListaCurso { get; set; }
 

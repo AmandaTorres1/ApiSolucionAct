@@ -1,83 +1,75 @@
-﻿using Microsoft.AspNetCore.Http;
+using Dao_library;
+using Entity_library;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
-    public class PersonController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PersonController : ControllerBase
     {
-        // GET: PersonController
-        public ActionResult Index()
+        private readonly ILogger<PersonController> _logger;
+        private readonly PersonDao _personDAO;
+
+        public PersonController(ILogger<PersonController> logger, PersonDao personDAO)
         {
-            return View();
+            _logger = logger;
+            _personDAO = personDAO;
         }
 
-        // GET: PersonController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        public List<Person> GetPersons()
         {
-            return View();
+            return _personDAO.GetAllPersons();
         }
 
-        // GET: PersonController/Create
-        public ActionResult Create()
+        [HttpGet("{id}")]
+        public IActionResult Get(long id)
         {
-            return View();
+            var person = _personDAO.ReadPersonById(id);
+            if (person == null)
+            {
+                return NotFound();
+            }
+            return Ok(person);
         }
 
-        // POST: PersonController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult CreatePerson(Person person)
         {
-            try
+            if (person.Name == null)
             {
-                return RedirectToAction(nameof(Index));
+                return BadRequest("Name is required.");
             }
-            catch
-            {
-                return View();
-            }
+
+            Person createdPerson = _personDAO.CreatePerson(person);
+            return Created($"/person/{createdPerson.Id}", createdPerson);
         }
 
-        // GET: PersonController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpPut("{id}")]
+        public ActionResult UpdatePerson(long id, Person person)
         {
-            return View();
+            Person? existingPerson = _personDAO.ReadPersonById(id);
+            if (existingPerson == null)
+            {
+                return NotFound();
+            }
+
+            person.Id = id;
+            _personDAO.UpdatePerson(person);
+
+            return Ok(person);
         }
 
-        // POST: PersonController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpDelete("{id}")]
+        public IActionResult DeletePerson(long id)
         {
-            try
+            bool deleted = _personDAO.DeletePersonById(id);
+            if (!deleted)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: PersonController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: PersonController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return NoContent();
         }
     }
 }

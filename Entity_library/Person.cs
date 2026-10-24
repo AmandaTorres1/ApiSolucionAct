@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Entity_library
@@ -12,8 +13,15 @@ namespace Entity_library
         private int age;
 
         public long Id { get => id; set => id = value; }
+
+        [Required]
+        [StringLength(100, MinimumLength = 3)]
         public string Name { get => name; set => name = value; }
+
+        [StringLength(15, MinimumLength = 7)]
         public string? Dni { get => dni; set => dni = value; }
+
+        [Range(1, 100)]
         public int Age { get => age; set => age = value; }
 
         //CONSTRUCTOR

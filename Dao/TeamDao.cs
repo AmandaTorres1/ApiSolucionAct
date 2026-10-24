@@ -1,45 +1,36 @@
-﻿using Dao_library;
 using Entity_library;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Dao_library
 {
     public class TeamDao
     {
-        public Team GetTeam(Team team)
+        public Team CreateTeam(Team team)
         {
-            return MockDatabase.Teams.FirstOrDefault(t => t.Name == team.Name);
+            team.Id = MockDatabase.Teams.Count + 1;
+            MockDatabase.Teams.Add(team);
+            return team;
         }
-        public Team PostTeam(Team team)
+
+        public Team? ReadTeamById(long id)
         {
-            if (team != null)
-            {
-                team.Id = MockDatabase.Teams.Count + 1;
-                MockDatabase.Teams.Add(team);
-                return team;
-            }
-            return null;
+            return MockDatabase.Teams.FirstOrDefault(t => t.Id == id);
         }
-        public Team PutTeam(Team team)
+
+        public bool UpdateTeam(Team team)
         {
             var existingTeam = MockDatabase.Teams.FirstOrDefault(t => t.Id == team.Id);
             if (existingTeam != null)
             {
                 existingTeam.Name = team.Name;
                 existingTeam.Categoty = team.Categoty;
-                return existingTeam;
+                return true;
             }
-            return null;
+            return false;
         }
-        public List<Team> GetTeam()
+
+        public bool DeleteTeamById(long id)
         {
-            return MockDatabase.Teams;
-        }
-        public bool DeleteTeam(Team team)
-        {
-            var existingTeam = MockDatabase.Teams.FirstOrDefault(t => t.Id == team.Id);
+            var existingTeam = MockDatabase.Teams.FirstOrDefault(t => t.Id == id);
             if (existingTeam != null)
             {
                 MockDatabase.Teams.Remove(existingTeam);
@@ -48,5 +39,9 @@ namespace Dao_library
             return false;
         }
 
+        public List<Team> GetAllTeams()
+        {
+            return MockDatabase.Teams;
+        }
     }
 }
